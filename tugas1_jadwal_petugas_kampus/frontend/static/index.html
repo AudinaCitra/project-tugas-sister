@@ -1,0 +1,286 @@
+
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>SiPiket | Dashboard</title>
+  <link rel="stylesheet" href="/static/style.css">
+  <script src="/config.js"></script>
+  <script defer src="/static/app.js"></script>
+</head>
+<body>
+  <section id="loginScreen" class="login-screen">
+    <div class="login-left">
+      <div class="logo-large">✦ <span>SiPiket<span class="logo-dot">.</span></span></div>
+      <span class="tagline">SISTEM PENGELOLAAN KAMPUS</span>
+      <h1>Satu tempat untuk jadwal dan kondisi fasilitas kampus.</h1>
+      <p>Kelola jadwal petugas dan laporan kerusakan fasilitas.</p>
+      <div class="login-ornament">A · E · F · G · H · L</div>
+    </div>
+
+    <div class="login-right">
+      <div class="login-card">
+        <span class="overline">SELAMAT DATANG</span>
+        <h2>Masuk ke Dashboard</h2>
+        <p>Masuk sebagai admin atau petugas kampus.</p>
+
+        <label for="loginRole">Masuk sebagai</label>
+        <select id="loginRole">
+          <option value="petugas">Petugas</option>
+          <option value="admin">Admin</option>
+        </select>
+
+        <div id="loginNamaWrap">
+          <label for="loginNama">Nama petugas</label>
+          <select id="loginNama"><option>Memuat nama...</option></select>
+        </div>
+
+        <label for="loginPassword">Kata sandi</label>
+        <input id="loginPassword" type="password" placeholder="Masukkan kata sandi" autocomplete="current-password">
+        <div id="loginError" class="inline-error" role="alert"></div>
+        <button id="btnLogin" class="btn-primary btn-full">Masuk <span>→</span></button>
+      </div>
+    </div>
+  </section>
+
+  <div id="appShell" class="app-shell" hidden>
+    <aside id="sidebar" class="sidebar">
+      <div class="side-brand">
+        <span class="brand-icon">✦</span>
+        <span><b>SiPiket<span class="logo-dot">.</span></b><small>Campus Management</small></span>
+      </div>
+      <div class="nav-caption">Menu Utama</div>
+
+      <nav class="side-nav" aria-label="Navigasi dashboard">
+        <button class="nav-link active" data-page="beranda"><span>▦</span> Beranda</button>
+        <button class="nav-link" data-page="jadwal"><span>▤</span> Jadwal Piket</button>
+        <button class="nav-link" data-page="laporan"><span>◈</span> Barang Rusak</button>
+        <button id="navAdmin" class="nav-link" data-page="admin" hidden><span>⚙</span> Kelola Admin</button>
+        <button class="nav-link" data-page="profil"><span>♙</span> Profil Saya</button>
+      </nav>
+
+      <div class="sidebar-bottom">
+        <div class="help-card"><strong>Perlu bantuan?</strong><small>Hubungi admin kampus.</small></div>
+        <button id="sideLogout" class="logout-link">⇥ Keluar akun</button>
+      </div>
+    </aside>
+
+    <div class="work-area">
+      <header class="topbar">
+        <div class="topbar-left">
+          <button id="toggleNav" class="mobile-menu" aria-label="Buka menu">☰</button>
+          <span class="crumb">SiPiket</span>
+          <span class="crumb-separator">/</span>
+          <b id="crumbPage">Beranda</b>
+        </div>
+        <div class="user-chip">
+          <span class="avatar" id="avatar">A</span>
+          <span class="user-chip-copy"><b id="headerNama">Admin</b><small id="headerPeran">Administrator</small></span>
+          <button id="headerLogout" title="Keluar" aria-label="Keluar akun">⌄</button>
+        </div>
+      </header>
+
+      <main class="main-content">
+        <div id="pesan" class="toast" role="status" aria-live="polite" hidden></div>
+
+        <section id="page-beranda" class="page">
+          <div class="page-heading">
+            <div>
+              <span class="overline">OVERVIEW</span>
+              <h1 id="sapaJudul">Halo!</h1>
+              <p id="sapaDeskripsi">Pantau jadwal dan fasilitas kampus.</p>
+            </div>
+            <span id="tanggalHariIni" class="today-pill"></span>
+          </div>
+
+          <div class="metrics">
+            <div class="metric-card">
+              <span class="metric-title" id="metricLabel1">Petugas Aktif</span>
+              <b id="metric1">—</b><span class="metric-bottom">Data petugas</span>
+            </div>
+            <div class="metric-card">
+              <span class="metric-title" id="metricLabel2">Penugasan Minggu Ini</span>
+              <b id="metric2">—</b><span class="metric-bottom">Total shift</span>
+            </div>
+            <div class="metric-card">
+              <span class="metric-title" id="metricLabel3">Perlu Ditangani</span>
+              <b id="metric3">—</b><span class="metric-bottom"><span class="pink-dot">●</span> Belum selesai</span>
+            </div>
+            <div class="metric-card">
+              <span class="metric-title" id="metricLabel4">Perbaikan Selesai</span>
+              <b id="metric4">—</b><span class="metric-bottom"><span class="green-dot">●</span> Selesai</span>
+            </div>
+          </div>
+
+          <div class="content-split">
+            <section class="panel">
+              <div class="panel-head">
+                <div><h2>Laporan Fasilitas Terbaru</h2><p>Pemantauan kerusakan</p></div>
+                <button class="text-action" data-go="laporan">Lihat semua →</button>
+              </div>
+              <div class="table-scroll">
+                <table id="recentTable"><tbody><tr><td>Memuat...</td></tr></tbody></table>
+              </div>
+            </section>
+            <section class="panel">
+              <div class="panel-head">
+                <div><h2 id="ringkasJudul">Informasi Dashboard</h2><p>Aktivitas terbaru</p></div>
+              </div>
+              <div id="ringkasanArea" class="summary-list"></div>
+            </section>
+          </div>
+        </section>
+
+        <section id="page-jadwal" class="page" hidden>
+          <div class="page-heading">
+            <div>
+              <span class="overline">PENJADWALAN</span>
+              <h1>Jadwal Piket Petugas</h1>
+              <p>Jadwal kerja per bagian dan shift.</p>
+            </div>
+            <button id="btnCetak" class="btn-light">▣ Cetak jadwal</button>
+          </div>
+
+          <section class="panel">
+            <div class="panel-head">
+              <h2 id="labelMinggu"></h2>
+              <div class="actions">
+                <button id="btnSebelum" class="btn-light">‹ Sebelumnya</button>
+                <button id="btnIni" class="btn-light">Minggu ini</button>
+                <button id="btnSesudah" class="btn-light">Berikutnya ›</button>
+              </div>
+            </div>
+            <div class="filter-row">
+              <div><label for="filterBagian">Bagian kerja</label><select id="filterBagian"></select></div>
+              <div><label for="sorotNama">Sorot nama petugas</label><select id="sorotNama"></select></div>
+            </div>
+            <ul id="legenda" class="legend"></ul>
+          </section>
+          <div id="grid"></div>
+        </section>
+
+        <section id="page-laporan" class="page" hidden>
+          <div class="page-heading">
+            <div>
+              <span class="overline">FASILITAS KAMPUS</span>
+              <h1>Laporan Barang Rusak</h1>
+              <p id="deskripsiLaporan">Pantau fasilitas yang perlu diperbaiki.</p>
+            </div>
+            <button id="btnShowLaporan" class="btn-primary" hidden>＋ Tambah Laporan</button>
+          </div>
+
+          <section id="formLaporanBox" class="panel" hidden>
+            <div class="panel-head">
+              <div><h2 id="judulFormLaporan">Catat barang rusak</h2><p>Masukkan data laporan kerusakan.</p></div>
+              <button id="btnCloseLaporan" class="btn-light">Tutup ×</button>
+            </div>
+            <div class="form-grid">
+              <div><label for="lapGedung">Gedung</label><select id="lapGedung"></select></div>
+              <div><label for="lapRuang">Ruang / lantai</label><input id="lapRuang" maxlength="80" placeholder="Lantai 2, Ruang 204"></div>
+              <div><label for="lapBarang">Nama barang</label><input id="lapBarang" maxlength="100" placeholder="AC / Proyektor"></div>
+              <div><label for="lapKondisi">Kondisi</label><select id="lapKondisi"></select></div>
+              <div class="form-span"><label for="lapPetugas">Petugas</label><select id="lapPetugas"></select></div>
+              <div class="form-span"><label for="lapKet">Keterangan</label><textarea id="lapKet" rows="3" maxlength="500"></textarea></div>
+            </div>
+            <div class="form-actions">
+              <button id="btnSimpanLaporan" class="btn-primary">Simpan laporan</button>
+              <button id="btnCancelLaporan" class="btn-light">Batal</button>
+            </div>
+          </section>
+
+          <section class="panel">
+            <div class="panel-head">
+              <div><h2>Daftar Laporan</h2><p id="totalLaporan">Menampilkan laporan fasilitas</p></div>
+              <div class="actions">
+                <select id="filterGedung" aria-label="Filter gedung"></select>
+                <select id="filterStatus" aria-label="Filter status">
+                  <option value="">Semua status</option>
+                  <option>Dilaporkan</option>
+                  <option>Diproses</option>
+                  <option>Selesai</option>
+                </select>
+              </div>
+            </div>
+            <div class="table-scroll">
+              <table id="tabelLaporan"><tbody><tr><td>Memuat data...</td></tr></tbody></table>
+            </div>
+          </section>
+        </section>
+
+        <section id="page-admin" class="page" hidden>
+          <div class="page-heading">
+            <div>
+              <span class="overline">PANEL ADMINISTRATOR</span>
+              <h1>Kelola Petugas &amp; Jadwal</h1>
+              <p>Pengelolaan jadwal dan data petugas.</p>
+            </div>
+            <span class="role-pill">● AKSES ADMIN</span>
+          </div>
+
+          <section class="panel">
+            <div class="panel-head"><div><h2>Buat Jadwal Otomatis</h2><p>Atur pembagian shift petugas.</p></div></div>
+            <div class="form-grid">
+              <div><label for="genBagian">Bagian</label><select id="genBagian"></select></div>
+              <div><label for="genMulai">Tanggal mulai</label><input id="genMulai" type="date"></div>
+              <div><label for="genHari">Lama jadwal</label>
+                <select id="genHari">
+                  <option value="7">1 minggu</option>
+                  <option value="14">2 minggu</option>
+                  <option value="21">3 minggu</option>
+                  <option value="28">4 minggu</option>
+                </select>
+              </div>
+              <div><label for="genPer">Petugas per shift</label><select id="genPer"><option>1</option><option>2</option><option>3</option></select></div>
+            </div>
+            <div class="form-actions"><button id="btnGenerate" class="btn-primary">＋ Buat Jadwal</button></div>
+            <div id="hasilGenerate"></div>
+          </section>
+
+          <section class="panel">
+            <div class="panel-head"><div><h2>Beban Kerja Petugas <span id="labelStat" class="muted"></span></h2><p>Rekap jumlah shift.</p></div></div>
+            <div class="table-scroll"><table id="tabelStat"></table></div>
+          </section>
+
+          <section class="panel">
+            <div class="panel-head"><div><h2>Data Petugas</h2><p>Daftar petugas kampus.</p></div></div>
+            <div class="form-grid">
+              <div><label for="angNama">Nama lengkap</label><input id="angNama" maxlength="60" placeholder="Nama petugas baru"></div>
+              <div><label for="angBagian">Bagian</label><select id="angBagian"></select></div>
+              <div><label for="angMaks">Maksimal shift/minggu</label><input id="angMaks" type="number" value="5" min="1" max="7"></div>
+            </div>
+            <div class="form-actions"><button id="btnTambahAnggota" class="btn-primary">＋ Tambah Petugas</button></div>
+            <div class="table-scroll"><table id="tabelAnggota"></table></div>
+          </section>
+
+          <section class="panel">
+            <div class="panel-head"><div><h2>Cuti / Izin</h2><p>Catat cuti petugas.</p></div></div>
+            <div class="form-grid">
+              <div><label for="cutiAnggota">Nama petugas</label><select id="cutiAnggota"></select></div>
+              <div><label for="cutiTanggal">Tanggal</label><input id="cutiTanggal" type="date"></div>
+              <div><label for="cutiAlasan">Alasan</label><input id="cutiAlasan" maxlength="100" placeholder="Sakit, izin keluarga, dll."></div>
+            </div>
+            <div class="form-actions"><button id="btnTambahCuti" class="btn-primary">＋ Catat Cuti</button></div>
+            <div class="table-scroll"><table id="tabelCuti"></table></div>
+          </section>
+        </section>
+
+        <section id="page-profil" class="page" hidden>
+          <div class="page-heading">
+            <div><span class="overline">AKUN</span><h1>Profil Saya</h1><p>Data profil petugas.</p></div>
+          </div>
+          <section class="panel profile-panel">
+            <div class="profile-avatar" id="profileAvatar">A</div>
+            <div>
+              <h2 id="profilNama">—</h2>
+              <p id="profilBagian">—</p>
+              <span id="profilRole" class="role-pill"></span>
+              <button id="profilKeluar" class="btn-light">Keluar dari akun</button>
+            </div>
+          </section>
+        </section>
+      </main>
+    </div>
+  </div>
+</body>
+</html>
