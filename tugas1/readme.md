@@ -105,8 +105,6 @@ Cara login:
 3. Masukkan password.
 4. Klik Masuk.
 
-Catatan: Semua petugas menggunakan password yang sama untuk keperluan demonstrasi aplikasi.
-
 ## Fitur Aplikasi
 1. Login Admin dan Petugas.
 2. Dashboard informasi piket.
@@ -133,9 +131,3 @@ Catatan: Semua petugas menggunakan password yang sama untuk keperluan demonstras
 SiPiket menggabungkan sistem penjadwalan piket dan pengelolaan laporan kerusakan fasilitas kampus dalam satu aplikasi web.
 
 Aplikasi ini memenuhi konsep Tugas 1 Sistem Terdistribusi karena menggunakan dua aplikasi yang berjalan pada port berbeda dan saling terhubung melalui REST API.
-
-## Catatan
-
-Aplikasi dibuat untuk kebutuhan pembelajaran dan demonstrasi Tugas 1 Sistem Terdistribusi.
-
-Password bawaan hanya untuk pengujian lokal dan sebaiknya diganti jika aplikasi dipublikasikan.
