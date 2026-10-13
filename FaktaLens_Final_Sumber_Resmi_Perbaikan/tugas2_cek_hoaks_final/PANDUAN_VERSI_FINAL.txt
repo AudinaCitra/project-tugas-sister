@@ -1,0 +1,43 @@
+FAKTALENS — VERSI PERBAIKAN VERIFIKASI
+
+A. JIKA SUDAH PUNYA FAKTALENS LAMA
+1. Tutup server Flask di VS Code: Ctrl+C.
+2. Backup seluruh folder FaktaLens lama.
+3. Dari ZIP baru, salin file berikut ke folder lama:
+   - app.py
+   - verifikasi.py (FILE BARU, WAJIB)
+   - static/app.js
+4. File static/index.html dan static/style.css tidak wajib diganti karena tampilannya tetap sama.
+5. Jangan hapus file .env dan riwayat.db milikmu.
+6. Jalankan di folder yang berisi app.py:
+   python -m pip install -r requirements.txt
+   python app.py
+7. Buka http://127.0.0.1:5001 lalu Ctrl+F5.
+
+B. JIKA MEMBUAT FOLDER BARU DARI ZIP
+1. Ekstrak ZIP lalu buka folder tugas2_cek_hoaks_final di VS Code.
+2. Jalankan python -m pip install -r requirements.txt.
+3. Salin .env.example menjadi .env dan isi GOOGLE_FACTCHECK_API_KEY milikmu.
+4. Jalankan python app.py.
+5. Buka http://127.0.0.1:5001.
+
+C. PENGUJIAN
+- Teks: Vaksin COVID-19 mengandung microchip
+- Fakta sejarah: Indonesia merdeka pada 17 Agustus 1945
+- Negasi: Indonesia tidak merdeka pada 17 Agustus 1945
+- Gambar: screenshot pesan, pakai OCR, cek/edit teks klaimnya dulu
+- Tautan: artikel berita atau judul video YouTube
+- Postman: POST http://127.0.0.1:5001/api/cek
+  Body JSON: {"jenis":"teks","teks":"Vaksin COVID-19 mengandung microchip"}
+- Tes logika offline: python -m unittest -v test_verifikasi.py
+- Tes Flask (jika dependensi terpasang): python -m unittest -v test_app.py
+
+PENTING
+Hasil ditentukan berdasarkan penilaian cek fakta yang relevan. Wikipedia dipakai
+sebagai referensi tambahan dan hanya untuk verifikasi tanggal kemerdekaan yang
+tercocokkan secara eksplisit. Berita di Google News belum otomatis terverifikasi.
+Tidak ada jaminan akurasi 90-100%. Uji pada banyak contoh yang sudah diberi
+label benar/salah oleh manusia sebelum menyatakan persentase keberhasilan.
+Untuk menghitung persentase pada data uji sendiri, isi data_uji_template.csv
+lalu jalankan python ukur_akurasi.py data_uji_template.csv.
+JANGAN sertakan .env berisi API key rahasia saat mengumpulkan tugas.
